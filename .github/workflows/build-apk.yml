@@ -1,0 +1,43 @@
+name: Build Zimmah Pro APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install pwa2apk
+        run: npm install -g pwa2apk
+
+      - name: Build APK
+        run: |
+          pwa2apk \
+            --url "https://muhzinabdi59-dev.github.io/-zimmah-pro-app/" \
+            --name "Zimmah Pro" \
+            --package "com.zimmahpro.app" \
+            --output "./dist"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zimmah-Pro-APK
+          path: ./dist/*.apk
